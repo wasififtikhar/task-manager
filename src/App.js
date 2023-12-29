@@ -1,25 +1,43 @@
-import logo from './logo.svg';
+// App.js
+import React, { useState, useEffect } from 'react';
+import TaskForm from './components/TaskForm'
+import TaskList from './components/TaskList';
 import './App.css';
 
-function App() {
+const App = () => {
+  const [tasks, setTasks] = useState([]);
+
+  useEffect(() => {
+    const storedTasks = JSON.parse(localStorage.getItem('tasks')) || [];
+    setTasks(storedTasks);
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+  }, [tasks]);
+
+  const addTask = (newTask) => {
+    setTasks([...tasks, newTask]);
+  };
+
+  const deleteTask = (taskId) => {
+    const updatedTasks = tasks.filter((task) => task.id !== taskId);
+    setTasks(updatedTasks);
+  };
+
+  const updateTask = (taskId) => {
+    // Implement the update logic based on your requirements
+    console.log(`Update task with ID: ${taskId}`);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>Task Manager</h1>
+      <TaskForm addTask={addTask} />
+      <TaskList tasks={tasks} deleteTask={deleteTask} updateTask={updateTask} />
     </div>
   );
-}
+};
 
 export default App;
+
